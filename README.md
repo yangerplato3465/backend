@@ -8,8 +8,8 @@ Docker, and Kubernetes** — where each technology is load-bearing rather than d
 
 ## Status
 
-Phase 1 of 13 complete — Dockerized stack (API + MongoDB + Redis), real readiness
-checks, multi-stage production image.
+Phase 2 of 13 complete — REST API with validated CRUD, layered modules,
+central error handling, and an OpenAPI explorer at `/docs`.
 
 Full roadmap: [`docs/roadmap.md`](docs/roadmap.md) ·
 Decisions: [`docs/decisions/`](docs/decisions/)
@@ -65,6 +65,26 @@ pnpm install && cp .env.example .env && pnpm dev
 |---|---|
 | `GET /healthz` | Liveness — process alive. Checks no dependencies (see [ADR 0003](docs/decisions/0003-liveness-vs-readiness.md)) |
 | `GET /readyz` | Readiness — pings Mongo and Redis; **503** with a per-dependency breakdown if either is down |
+| `GET /docs` | Interactive OpenAPI explorer — the fastest way to see the contract |
+| `GET /games` | List games, cursor-paginated (`?limit=&cursor=&activeOnly=`) |
+| `POST /games` | Create a game → 201 |
+| `GET /games/:slug` | Fetch one game |
+| `PATCH /games/:slug` | Partial update |
+| `DELETE /games/:slug` | Delete → 204 |
+| `GET /users` | List users |
+| `GET /users/:id` | Public profile (no email, no password hash) |
+
+### Error shape
+
+Every error returns the same JSON, so a client never special-cases per endpoint:
+
+```json
+{ "error": "NotFoundError", "code": "NOT_FOUND",
+  "message": "Game 'tetris' not found", "requestId": "req-5" }
+```
+
+`code` is the stable field to branch on. 5xx responses deliberately carry no
+internal detail — that goes to the logs.
 
 ## Layout
 
@@ -74,6 +94,10 @@ src/
   plugins/mongo.ts   Mongoose connection, exposed as app.mongo
   plugins/redis.ts   ioredis connection, exposed as app.redis
   plugins/health.ts  Liveness + readiness
+  shared/errors.ts   Typed errors services throw without knowing about HTTP
+  shared/error-handler.ts  Turns any thrown value into one consistent response
+  modules/games/     model | schemas | service | routes  (see ADR 0007)
+  modules/users/     same layering
   app.ts             buildApp() — no listener, so tests can use app.inject()
   server.ts          Entrypoint: signals registered before boot, then listen
 Dockerfile           Multi-stage; runtime is 268MB, non-root, tini as PID 1

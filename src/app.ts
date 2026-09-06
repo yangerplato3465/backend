@@ -1,24 +1,28 @@
 import Fastify, { type FastifyInstance } from 'fastify';
+import cors from '@fastify/cors';
+import swagger from '@fastify/swagger';
+import swaggerUi from '@fastify/swagger-ui';
+import {
+  serializerCompiler,
+  validatorCompiler,
+  jsonSchemaTransform,
+} from 'fastify-type-provider-zod';
+
 import { env } from './config/env.js';
+import { registerErrorHandler } from './shared/error-handler.js';
 import { healthRoutes } from './plugins/health.js';
 import mongoPlugin from './plugins/mongo.js';
 import redisPlugin from './plugins/redis.js';
+import { gameRoutes } from './modules/games/game.routes.js';
+import { userRoutes } from './modules/users/user.routes.js';
 
 /**
- * Builds the app WITHOUT starting a listener.
- *
- * This split (build vs. listen) is deliberate: tests can call
- * `app.inject({ method: 'GET', url: '/healthz' })` to exercise real routing and
- * serialization with no network port and no race conditions. It is the single
- * most useful structural decision for testability in a Fastify project.
+ * Builds the app WITHOUT starting a listener, so tests can drive it with
+ * `app.inject()` — no network port, no port-collision races.
  */
 export async function buildApp(): Promise<FastifyInstance> {
   const isDev = env.NODE_ENV === 'development';
 
-  // Built conditionally rather than passing `transport: undefined`, because
-  // `exactOptionalPropertyTypes` in tsconfig treats an explicit undefined as an error.
-  // pino-pretty is dev-only: in production we emit newline-delimited JSON, which is
-  // what log aggregators (and `kubectl logs`) expect.
   const logger = isDev
     ? {
         level: env.LOG_LEVEL,
@@ -31,19 +35,59 @@ export async function buildApp(): Promise<FastifyInstance> {
 
   const app = Fastify({
     logger,
-    // Trust an inbound x-request-id so a single request can be traced across
-    // services; Fastify generates one when the header is absent.
     requestIdHeader: 'x-request-id',
-    // Behind an ingress/load balancer, the client IP arrives in X-Forwarded-For.
-    // Without this, rate limiting in Phase 6 would limit the load balancer itself.
     trustProxy: true,
   });
 
-  // Order matters: healthRoutes reads app.mongo / app.redis, so the plugins
-  // that decorate them must be registered (and awaited) first.
+  // Teach Fastify to validate requests and serialize responses using the Zod
+  // schemas attached to each route. One schema now drives three things:
+  // runtime validation, TypeScript types, and the OpenAPI document below.
+  app.setValidatorCompiler(validatorCompiler);
+  app.setSerializerCompiler(serializerCompiler);
+
+  registerErrorHandler(app);
+
+  /**
+   * CORS — the browser rule that decides whether your frontend may call this API.
+   *
+   * A browser refuses cross-origin responses unless the server opts in, so
+   * without this every fetch() from a frontend on a different port fails. Note
+   * it is enforced by the BROWSER, not the server: curl and Postman ignore CORS
+   * entirely, which is why an endpoint can work in the terminal and still fail
+   * in the browser.
+   *
+   * Dev allows any origin for convenience. Phase 12 must replace this with an
+   * explicit allow-list — `origin: true` with credentials is a real vulnerability.
+   */
+  await app.register(cors, {
+    origin: isDev ? true : ['https://example.com'],
+    credentials: true,
+  });
+
+  // Generates an OpenAPI document from the same Zod schemas, and serves an
+  // interactive explorer at /docs. This is the fastest way for a frontend
+  // developer (you, later) to see exactly what the API accepts and returns.
+  await app.register(swagger, {
+    openapi: {
+      info: {
+        title: 'Arcade Arena API',
+        description: 'Game platform backend: games, users, scores, leaderboards.',
+        version: '0.1.0',
+      },
+      servers: [{ url: `http://localhost:${env.PORT}` }],
+    },
+    transform: jsonSchemaTransform,
+  });
+  await app.register(swaggerUi, { routePrefix: '/docs' });
+
+  // Infrastructure first: these decorate app.mongo / app.redis, which the
+  // routes registered afterwards depend on.
   await app.register(mongoPlugin);
   await app.register(redisPlugin);
+
   await app.register(healthRoutes);
+  await app.register(gameRoutes);
+  await app.register(userRoutes);
 
   return app;
 }
