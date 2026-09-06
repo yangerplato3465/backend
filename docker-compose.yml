@@ -1,0 +1,76 @@
+name: arcade-arena
+
+services:
+  api:
+    build:
+      context: .
+      target: dev
+    # Run an init process as PID 1 so signals reach the pnpm->tsx->node tree.
+    # The production image bakes in tini instead; see docs/decisions/0006.
+    init: true
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+      LOG_LEVEL: debug
+      PORT: "3000"
+      HOST: 0.0.0.0
+      # `mongo` and `redis`, not `localhost`. Every container has its own network
+      # namespace, so localhost means *this* container. Compose runs an internal
+      # DNS server that resolves service names to container IPs.
+      MONGO_URI: mongodb://mongo:27017/arcade_arena
+      REDIS_URL: redis://redis:6379
+    volumes:
+      # Bind-mount source for hot reload. node_modules is intentionally NOT
+      # mounted, so the container keeps the Linux binaries it installed rather
+      # than the macOS ones from the host.
+      - ./src:/app/src:ro
+      - ./tsconfig.json:/app/tsconfig.json:ro
+    depends_on:
+      # `service_started` would not be enough: the API connects to Mongo during
+      # boot, so it must wait for genuinely accepting connections, not merely
+      # for the container to exist.
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  mongo:
+    # Pinned to 7.0.x deliberately. MongoDB 8.0+ hard-refuses to start on Linux
+    # kernel 6.19+ (TCMalloc violates the rseq ABI, SERVER-121912) and OrbStack
+    # runs kernel 7.x. The documented GLIBC_TUNABLES workaround does not help,
+    # because the version gate runs before that tunable takes effect.
+    # 7.0 predates the affected TCMalloc path. See docs/decisions/0005.
+    image: mongo:7.0.40
+    ports:
+      # Exposed to the host so you can inspect real state with `mongosh`.
+      - "27017:27017"
+    volumes:
+      # Named volume: without it, every `docker compose down` wipes the database,
+      # because a container's writable layer dies with the container.
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  redis:
+    image: redis:8-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    # appendonly makes Redis persist to disk. Useful here so a restart does not
+    # silently empty your leaderboards while you are learning them (Phase 5).
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  mongo-data:
+  redis-data:

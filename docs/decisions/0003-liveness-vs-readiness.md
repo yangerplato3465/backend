@@ -1,6 +1,6 @@
 # 0003 — Separate liveness (`/healthz`) from readiness (`/readyz`)
 
-**Status:** accepted · Phase 0 (dependency checks land in Phase 10)
+**Status:** accepted · Phase 0; real dependency checks added in Phase 1
 
 ## Decision
 Two endpoints with different meanings:
@@ -25,3 +25,15 @@ of load balancing but stays alive, so it rejoins automatically once Mongo return
 A dependency outage becomes a restart storm. Pods restart, lose warm caches and
 connection pools, all reconnect simultaneously, and the thundering herd keeps the
 dependency down. The blast radius goes from degraded to dead.
+
+## Update (Phase 1)
+`/readyz` now performs real round trips — `db.admin().ping()` and `redis.ping()` —
+and returns **503** with a per-dependency breakdown when any fails. A probe reads the
+status code, so returning 200 with a "failing" body would be invisible to Kubernetes.
+
+Mongoose's `readyState` alone was rejected: it reports the driver's *belief* about the
+connection, not whether the server actually answers.
+
+Verified by stopping Redis: `/readyz` returned 503 `{"mongo":"ok","redis":"fail"}`
+while `/healthz` stayed **200** — so Kubernetes would pull the pod from load
+balancing without restarting it, and it rejoined automatically once Redis returned.

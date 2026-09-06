@@ -15,6 +15,9 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "fastify": "^5.12.3",
+    "fastify-plugin": "^6.0.0",
+    "ioredis": "^6.0.0",
+    "mongoose": "^9.9.5",
     "zod": "^4.5.4"
   },
   "devDependencies": {
@@ -27,5 +30,6 @@
     "onlyBuiltDependencies": [
       "esbuild"
     ]
-  }
+  },
+  "packageManager": "pnpm@10.5.0"
 }

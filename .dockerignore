@@ -1,0 +1,13 @@
+# Never ship these into the build context — they bloat it and can leak secrets.
+node_modules
+dist
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+*.log
+coverage
+docs
+README.md
+k8s

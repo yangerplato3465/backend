@@ -1,9 +1,10 @@
 import type { FastifyInstance } from 'fastify';
 
+type CheckResult = 'ok' | 'fail';
+
 /**
  * Liveness and readiness are NOT the same thing, and conflating them is one of
- * the most common Kubernetes mistakes. This split matters later (Phase 11), so
- * the shape is correct from day one.
+ * the most common Kubernetes mistakes. See docs/decisions/0003.
  */
 export async function healthRoutes(app: FastifyInstance): Promise<void> {
   /**
@@ -22,13 +23,40 @@ export async function healthRoutes(app: FastifyInstance): Promise<void> {
   /**
    * Readiness — "can this pod serve traffic right now?"
    * If this fails, Kubernetes removes the pod from the Service's endpoints but
-   * leaves it running, so it can recover and rejoin.
+   * leaves it running, so it can recover and rejoin automatically.
    *
-   * This is where dependency checks DO belong. Phase 2/5 will add real Mongo and
-   * Redis pings to `checks`.
+   * Dependency checks belong HERE, and must return a non-2xx status when they
+   * fail — a probe reads the status code, not the body.
    */
-  app.get('/readyz', async () => ({
-    status: 'ready',
-    checks: {} as Record<string, 'ok' | 'fail'>,
-  }));
+  app.get('/readyz', async (_request, reply) => {
+    const checks: Record<string, CheckResult> = {};
+
+    // An actual round trip. `readyState` alone would lie: it reports the
+    // driver's belief about the connection, not whether the server answers.
+    try {
+      const db = app.mongo.connection.db;
+      if (!db) throw new Error('no database handle');
+      await db.admin().ping();
+      checks.mongo = 'ok';
+    } catch (err) {
+      app.log.warn({ err }, 'readiness: mongo check failed');
+      checks.mongo = 'fail';
+    }
+
+    try {
+      await app.redis.ping();
+      checks.redis = 'ok';
+    } catch (err) {
+      app.log.warn({ err }, 'readiness: redis check failed');
+      checks.redis = 'fail';
+    }
+
+    const ready = Object.values(checks).every((c) => c === 'ok');
+
+    if (!ready) {
+      return reply.code(503).send({ status: 'not_ready', checks });
+    }
+
+    return reply.send({ status: 'ready', checks });
+  });
 }

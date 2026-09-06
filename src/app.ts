@@ -1,6 +1,8 @@
 import Fastify, { type FastifyInstance } from 'fastify';
 import { env } from './config/env.js';
 import { healthRoutes } from './plugins/health.js';
+import mongoPlugin from './plugins/mongo.js';
+import redisPlugin from './plugins/redis.js';
 
 /**
  * Builds the app WITHOUT starting a listener.
@@ -37,6 +39,10 @@ export async function buildApp(): Promise<FastifyInstance> {
     trustProxy: true,
   });
 
+  // Order matters: healthRoutes reads app.mongo / app.redis, so the plugins
+  // that decorate them must be registered (and awaited) first.
+  await app.register(mongoPlugin);
+  await app.register(redisPlugin);
   await app.register(healthRoutes);
 
   return app;
