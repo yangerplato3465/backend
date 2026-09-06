@@ -22,6 +22,11 @@ import * as gameService from './game.service.js';
 export async function gameRoutes(app: FastifyInstance): Promise<void> {
   const api = app.withTypeProvider<ZodTypeProvider>();
 
+  // Reads stay public — a frontend must be able to list games before login.
+  // Writes are admin-only: any authenticated player could otherwise raise a
+  // game's anti-cheat ceiling and then submit impossible scores through it.
+  const adminOnly = app.requireRoles('admin');
+
   api.get(
     '/games',
     {
@@ -51,7 +56,9 @@ export async function gameRoutes(app: FastifyInstance): Promise<void> {
   api.post(
     '/games',
     {
+      preHandler: adminOnly,
       schema: {
+        security: [{ bearerAuth: [] }],
         tags: ['games'],
         summary: 'Create a game',
         body: createGameSchema,
@@ -68,7 +75,9 @@ export async function gameRoutes(app: FastifyInstance): Promise<void> {
   api.patch(
     '/games/:slug',
     {
+      preHandler: adminOnly,
       schema: {
+        security: [{ bearerAuth: [] }],
         tags: ['games'],
         summary: 'Update a game',
         params: gameParamsSchema,
@@ -83,7 +92,9 @@ export async function gameRoutes(app: FastifyInstance): Promise<void> {
   api.delete(
     '/games/:slug',
     {
+      preHandler: adminOnly,
       schema: {
+        security: [{ bearerAuth: [] }],
         tags: ['games'],
         summary: 'Delete a game',
         params: gameParamsSchema,

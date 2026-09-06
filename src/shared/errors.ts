@@ -42,3 +42,17 @@ export class BadRequestError extends AppError {
     super(message, 400, 'BAD_REQUEST', details);
   }
 }
+
+/** 401 — not authenticated, or credentials/tokens are invalid. */
+export class UnauthorizedError extends AppError {
+  constructor(message = 'Authentication required', code = 'UNAUTHORIZED') {
+    super(message, 401, code);
+  }
+}
+
+/** 403 — authenticated, but not allowed to do this. */
+export class ForbiddenError extends AppError {
+  constructor(message = 'Insufficient permissions') {
+    super(message, 403, 'FORBIDDEN');
+  }
+}

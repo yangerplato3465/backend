@@ -20,6 +20,11 @@ services:
       # DNS server that resolves service names to container IPs.
       MONGO_URI: mongodb://mongo:27017/arcade_arena
       REDIS_URL: redis://redis:6379
+      # Dev-only secret. Real deployments inject this from a Kubernetes Secret
+      # (Phase 11) — never a literal in a committed file.
+      JWT_SECRET: dev-only-insecure-secret-do-not-use-in-production-0123456789
+      ACCESS_TOKEN_TTL: 15m
+      REFRESH_TOKEN_TTL_SECONDS: "2592000"
     volumes:
       # Bind-mount source for hot reload. node_modules is intentionally NOT
       # mounted, so the container keeps the Linux binaries it installed rather

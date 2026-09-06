@@ -22,6 +22,18 @@ const EnvSchema = z.object({
   // boot rather than on the first request that happens to need a database.
   MONGO_URI: z.string().min(1, 'MONGO_URI is required'),
   REDIS_URL: z.string().min(1, 'REDIS_URL is required'),
+
+  // Signing key for access tokens. 32 chars minimum: a short secret can be
+  // brute-forced offline, and anyone who recovers it can mint valid tokens for
+  // any user. There is deliberately no default — see ADR 0002.
+  JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters'),
+
+  // Access tokens are deliberately short-lived. They are not revocable (that is
+  // the point of a stateless token), so a stolen one must expire quickly.
+  ACCESS_TOKEN_TTL: z.string().default('15m'),
+
+  // Refresh tokens live in Redis, so they ARE revocable. They can be long-lived.
+  REFRESH_TOKEN_TTL_SECONDS: z.coerce.number().int().positive().default(60 * 60 * 24 * 30),
 });
 
 export type Env = z.infer<typeof EnvSchema>;

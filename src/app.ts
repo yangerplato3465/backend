@@ -13,8 +13,10 @@ import { registerErrorHandler } from './shared/error-handler.js';
 import { healthRoutes } from './plugins/health.js';
 import mongoPlugin from './plugins/mongo.js';
 import redisPlugin from './plugins/redis.js';
+import authPlugin from './plugins/auth.js';
 import { gameRoutes } from './modules/games/game.routes.js';
 import { userRoutes } from './modules/users/user.routes.js';
+import { authRoutes } from './modules/auth/auth.routes.js';
 
 /**
  * Builds the app WITHOUT starting a listener, so tests can drive it with
@@ -75,6 +77,13 @@ export async function buildApp(): Promise<FastifyInstance> {
         version: '0.1.0',
       },
       servers: [{ url: `http://localhost:${env.PORT}` }],
+      components: {
+        securitySchemes: {
+          // Lets the /docs explorer send an Authorization header, so protected
+          // routes are testable from the browser.
+          bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+        },
+      },
     },
     transform: jsonSchemaTransform,
   });
@@ -84,8 +93,11 @@ export async function buildApp(): Promise<FastifyInstance> {
   // routes registered afterwards depend on.
   await app.register(mongoPlugin);
   await app.register(redisPlugin);
+  // Must come after redis: auth routes read app.redis for the refresh-token store.
+  await app.register(authPlugin);
 
   await app.register(healthRoutes);
+  await app.register(authRoutes);
   await app.register(gameRoutes);
   await app.register(userRoutes);
 

@@ -8,8 +8,8 @@ Docker, and Kubernetes** — where each technology is load-bearing rather than d
 
 ## Status
 
-Phase 2 of 13 complete — REST API with validated CRUD, layered modules,
-central error handling, and an OpenAPI explorer at `/docs`.
+Phase 3 of 13 complete — authentication: argon2id passwords, JWT access tokens,
+and rotating refresh tokens in Redis with theft detection.
 
 Full roadmap: [`docs/roadmap.md`](docs/roadmap.md) ·
 Decisions: [`docs/decisions/`](docs/decisions/)
@@ -71,6 +71,11 @@ pnpm install && cp .env.example .env && pnpm dev
 | `GET /games/:slug` | Fetch one game |
 | `PATCH /games/:slug` | Partial update |
 | `DELETE /games/:slug` | Delete → 204 |
+| `POST /auth/register` | Create an account → 201 with a token pair |
+| `POST /auth/login` | Credentials → access + refresh token |
+| `POST /auth/refresh` | Rotate the refresh token (single-use) |
+| `POST /auth/logout` | Revoke a whole token family → 204 |
+| `GET /auth/me` | The authenticated user (requires Bearer token) |
 | `GET /users` | List users |
 | `GET /users/:id` | Public profile (no email, no password hash) |
 
@@ -96,8 +101,10 @@ src/
   plugins/health.ts  Liveness + readiness
   shared/errors.ts   Typed errors services throw without knowing about HTTP
   shared/error-handler.ts  Turns any thrown value into one consistent response
+  plugins/auth.ts    JWT verification, app.authenticate, app.requireRoles
   modules/games/     model | schemas | service | routes  (see ADR 0007)
   modules/users/     same layering
+  modules/auth/      password hashing, refresh-token store, auth service/routes
   app.ts             buildApp() — no listener, so tests can use app.inject()
   server.ts          Entrypoint: signals registered before boot, then listen
 Dockerfile           Multi-stage; runtime is 268MB, non-root, tini as PID 1
@@ -111,3 +118,8 @@ docs/decisions/      Architecture decision records (the "why")
   and OrbStack runs 7.x. ([ADR 0005](docs/decisions/0005-pin-mongodb-7.md))
 - **tini is PID 1.** Without it, SIGTERM during startup is discarded and the
   container hangs until SIGKILL. ([ADR 0006](docs/decisions/0006-tini-pid1-signals.md))
+- **Role changes need a new token.** Roles are read from the access token, not the
+  database, so a promotion takes effect on the next login or refresh (≤15 min).
+  ([ADR 0011](docs/decisions/0011-token-strategy.md))
+- **`JWT_SECRET` has no default.** The app refuses to boot without one of at least
+  32 characters. Compose sets a dev-only value; Phase 11 injects a real Secret.

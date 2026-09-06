@@ -11,12 +11,18 @@ importers:
       '@fastify/cors':
         specifier: ^11.3.0
         version: 11.3.0
+      '@fastify/jwt':
+        specifier: ^10.2.2
+        version: 10.2.2
       '@fastify/swagger':
         specifier: ^9.8.1
         version: 9.8.1
       '@fastify/swagger-ui':
         specifier: ^6.1.1
         version: 6.1.1
+      '@node-rs/argon2':
+        specifier: ^2.2.0
+        version: 2.2.0
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
@@ -228,6 +234,9 @@ packages:
   '@fastify/forwarded@3.0.2':
     resolution: {integrity: sha512-NE8HgKLgYejV9lDpqkEFaDKMLYelJBVfHekhB0UKvX0ghagXRJqg68feg8er1NPXxG4N9i6vPxzt8E+3wHfcmA==}
 
+  '@fastify/jwt@10.2.2':
+    resolution: {integrity: sha512-UOYY5db2ttuWk2FcN5L6rawE0OFa4+QRJdsYEiHCBmf1GFLC9/k73f/mmv2dxIhS0b/02/62T0Hs6sk+w18Tyg==}
+
   '@fastify/merge-json-schemas@0.2.1':
     resolution: {integrity: sha512-OA3KGBCy6KtIvLf8DINC5880o5iBlDX4SxzLQS8HorJAbqluzLRn80UXU0bxZn7UOFhFgpRJDasfwn9nG4FG4A==}
 
@@ -255,6 +264,88 @@ packages:
 
   '@mongodb-js/saslprep@1.5.0':
     resolution: {integrity: sha512-Hk1SKJCMcCos38+vqDnZzlIo4XRj9yCGzYkjB4LcqpeXRIYfia1UWTz+VrueLxoU+uSRJzgkufxoRZg8gi52YA==}
+
+  '@node-rs/argon2-android-arm-eabi@2.2.0':
+    resolution: {integrity: sha512-xbJvpiTlYqKxq5XRkhQlZNiIRE4fZPFJdB46jOPED8pGkxgn1erMMdVCPWp1RcOxuChaiEOl8DVu5sVVu9ApVw==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [android]
+
+  '@node-rs/argon2-android-arm64@2.2.0':
+    resolution: {integrity: sha512-i47xYwh8GNKc0yNwFQz7Hqsx6pBZJsJ1hqRXmtThOXbjl6HoVlX7oGBpqq4s+sBrU8ba0kubAqJ8fBjtp4iwHQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [android]
+
+  '@node-rs/argon2-darwin-arm64@2.2.0':
+    resolution: {integrity: sha512-Zet1ekAQPUczRQ6cmFCpQyScg9346SnzYt7CRWPd4GCs8CBOOK34PrtbazdReHcBxUgSDnhMhDWnO0jmtJ15sQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@node-rs/argon2-darwin-x64@2.2.0':
+    resolution: {integrity: sha512-JeOpmf5glG9MTS+qt6VZ3tUUZdQ3Kll/e18yUeBmDRSKQDN0AJs5ruzqV08DOclVUqXG0IF2DVhbE825RN96yA==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@node-rs/argon2-freebsd-x64@2.2.0':
+    resolution: {integrity: sha512-w7R4yoAcOlZctOz7EHhf2hFHSuRyJcphMZAcyKRJ3Sxu8APjqifLepOkuXC1Gat08DYFTI51RMPj7sMU36KcGA==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [freebsd]
+
+  '@node-rs/argon2-linux-arm-gnueabihf@2.2.0':
+    resolution: {integrity: sha512-H5uGMLmj2vor3YDAX+LIyw4yGXEESXvr5voyRK+AuxdIvZ/B7mxma06IOmb+4n9t/MQ1Lbwu7gkyWt8f3wyrNA==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [linux]
+
+  '@node-rs/argon2-linux-arm64-gnu@2.2.0':
+    resolution: {integrity: sha512-P0A+tUMI7NwImaK7txceScl7d18GAw4hkt27NChZIZdD55w7qZ81LFcA4cEP9L6kgdubItlAqcD/qBR5XMCd5Q==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@node-rs/argon2-linux-arm64-musl@2.2.0':
+    resolution: {integrity: sha512-i5s9msRRy+m/yul9M+1OF7fN/VqhJ+4IalPn1rhyrE3gwNcgfoT+A0DuAqR5gtXmDb3zx+QWIjtHCLhvkvu23g==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@node-rs/argon2-linux-x64-gnu@2.2.0':
+    resolution: {integrity: sha512-R6oaRA2Iesbsexe06Aeydbdz617WD2lE6yDcb4t5T+0iGM1VyVpI+nNpcAtkcXyO6Dgmuhh+3RKbm/F2CSBt1w==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+
+  '@node-rs/argon2-linux-x64-musl@2.2.0':
+    resolution: {integrity: sha512-Paql63t7XusSTYMSfEQ0ex5edubWX/OhvLRYsC+oQxWiC+3x2WcYWp+fWVwdlAm+eJRsIOj6w3iG3yDy94ZL8A==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+
+  '@node-rs/argon2-win32-arm64-msvc@2.2.0':
+    resolution: {integrity: sha512-ysl+KaEeYVBKY3/J4w3VKD7KVHATpsJ/TMtxjmVyX8KEhwemH2qmlyZcVQb5fPy+Yk18g7cHu7LYuDffROo8pw==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@node-rs/argon2-win32-ia32-msvc@2.2.0':
+    resolution: {integrity: sha512-2Hp0RtOgM8jxcTsrtYlIkfk0PQXFnENyqvEuFTNCHMFSWhV8D/Ds2OrWSmjWTGQhLNWNp2JrX4XKsZM0+PB3NA==}
+    engines: {node: '>= 10'}
+    cpu: [ia32]
+    os: [win32]
+
+  '@node-rs/argon2-win32-x64-msvc@2.2.0':
+    resolution: {integrity: sha512-cfcNjVqLpgOU/9l2mLOFduuXTxvGH5qoV38AhcOz9oQaC7GDmsFbAgcuizVNuOtpSyQr5HoQez3f2X2jYgGMsg==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [win32]
+
+  '@node-rs/argon2@2.2.0':
+    resolution: {integrity: sha512-iBItNNiiim2nzhmUY4uxA4nYaNBatj8Ae/YnlwQzRYRFiBysm2scfsyjO+ktH+7VHl1O24UwFd2EeihV4IJzxw==}
+    engines: {node: '>= 10'}
 
   '@pinojs/redact@0.4.0':
     resolution: {integrity: sha512-k2ENnmBugE/rzQfEcdWHcCY+/FM3VLzH9cYEsbdsoqrvzAKRhUZeRNhAZvB8OitQJ1TBed3yqWtdjzS6wJKBwg==}
@@ -405,6 +496,9 @@ packages:
   ajv@8.20.0:
     resolution: {integrity: sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA==}
 
+  asn1.js@5.4.1:
+    resolution: {integrity: sha512-+I//4cYPccV8LdmBLiX8CYvf9Sp3vQsrqu2QNXRcrbiWvcx/UdlFiqUJJzxRQxgsZmvhXhn4cSKeSmoFjVdupA==}
+
   atomic-sleep@1.0.0:
     resolution: {integrity: sha512-kNOjDqAh7px0XWNI+4QbzoiR/nTkHAWNud2uvnJquD1/x5a7EQZMJT0AczqK0Qn67oY/TTQ1LbUKajZpp3I9tQ==}
     engines: {node: '>=8.0.0'}
@@ -415,6 +509,9 @@ packages:
   balanced-match@4.0.4:
     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
     engines: {node: 18 || 20 || >=22}
+
+  bn.js@4.12.5:
+    resolution: {integrity: sha512-3aRg6/JxfffFD+OlOjOFR3Vo79l39ooBTFucxx+MT3dhCtzn3EmiUPQo+6/OZuI2jbXi3YKgmiTFBgChQMwIRQ==}
 
   brace-expansion@5.0.9:
     resolution: {integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==}
@@ -467,6 +564,9 @@ packages:
     resolution: {integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==}
     engines: {node: '>=12'}
 
+  ecdsa-sig-formatter@1.0.11:
+    resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
+
   end-of-stream@1.4.5:
     resolution: {integrity: sha512-ooEGc6HP26xXq/N+GCGOT0JKCLDGrq2bQUZrQ7gyrJiZANJ/8YDTxTpQBXGMn+WbIQXNVpyWymm7KYVICQnyOg==}
 
@@ -490,6 +590,10 @@ packages:
   fast-json-stringify@7.0.1:
     resolution: {integrity: sha512-eRSayARSbbwlBjpP4vnTTIRD5QPcIrmihPxDeN1DtKnHPg66UuJLx+8hlK1kaFdjvzyQ/dzALoi4vwAQ+T+iZA==}
 
+  fast-jwt@6.3.3:
+    resolution: {integrity: sha512-pQDXx7IHeZT4jSmpE9o80RrBqfrG4fPrl8anazSM5vErIdK1iCc13z/EWX+H0j7liWSRnwTpHswIKMeLYGAckw==}
+    engines: {node: '>=20'}
+
   fast-querystring@1.1.2:
     resolution: {integrity: sha512-g6KuKWmFXc0fID8WWH0jit4g0AGBoJhCkJMb1RmbsSEUNvQ+ZC8D6CUZ+GtF8nMzSPXnhiePyyqqipzNNEnHjg==}
 
@@ -501,6 +605,10 @@ packages:
 
   fast-uri@4.1.4:
     resolution: {integrity: sha512-dODXrIxlS9JSdgAnhIUKOosKV1oMtU2VtVw87QRaHzyl5jxO290Ii5tEZfCfzfWNHi3jKWwBSdQj0qIyshdZdQ==}
+
+  fastfall@1.5.1:
+    resolution: {integrity: sha512-KH6p+Z8AKPXnmA7+Iz2Lh8ARCMr+8WNPVludm1LGkZoD2MjY6LVnRMtTKhkdzI+jr0RzQWXKzKyBJm1zoHEL4Q==}
+    engines: {node: '>=0.10.0'}
 
   fastify-plugin@6.0.0:
     resolution: {integrity: sha512-fZOty7z3O7vOliF6d8bHE3wiEh1KcNnKEQensSgTk9C1DvN6nRLS++XVd86v33Hw/8u9Un8A1zDrQ8ujcQDHEg==}
@@ -516,8 +624,14 @@ packages:
   fastify@5.12.3:
     resolution: {integrity: sha512-reZ8wce5VNCcufIt9AVtzZa3L4u1j8esikn7OEgHWLVpRpL5R7Y2+Xzj70OUkv5zDfzUAxXZT6cu4Rt0zr3EKA==}
 
+  fastparallel@2.4.1:
+    resolution: {integrity: sha512-qUmhxPgNHmvRjZKBFUNI0oZuuH9OlSIOXmJ98lhKPxMZZ7zS/Fi0wRHOihDSz0R1YiIOjxzOY4bq65YTcdBi2Q==}
+
   fastq@1.20.3:
     resolution: {integrity: sha512-XKv5nnLs6nLF71NgiKJLIZFLkPyIEuOselLG7ujZnGrRfQK8HpvY+WqKhAJUAdLomwVHErVS4LfxFlPq0/FTAw==}
+
+  fastseries@1.7.2:
+    resolution: {integrity: sha512-dTPFrPGS8SNSzAt7u/CbMKCJ3s01N04s4JFbORHcmyvVfVKmbhMD1VtRbh5enGHxkaQDqWyLefiKOGGmohGDDQ==}
 
   find-my-way@9.9.0:
     resolution: {integrity: sha512-sJsgZ1sQH2UDuowPuMKg8az7Qc8F0jnj+SKkFWU/+T0xcFlgV5skgXOGUqmQzOdmW6ALA7AhJINWx3qFBkbLHA==}
@@ -583,6 +697,9 @@ packages:
     engines: {node: '>=10.0.0'}
     hasBin: true
 
+  minimalistic-assert@1.0.1:
+    resolution: {integrity: sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==}
+
   minimatch@10.2.6:
     resolution: {integrity: sha512-vpLQEs+VLCr1nU0BXS07maYoFwlDAH0gngQuuttxIwutDFEMHq2blX+8vpgxDdK3J1PwjCJiep77OitTZ4Ll1A==}
     engines: {node: 18 || 20 || >=22}
@@ -593,6 +710,9 @@ packages:
   minipass@7.1.3:
     resolution: {integrity: sha512-tEBHqDnIoM/1rXME1zgka9g6Q2lcoCkxHLuc7ODJ5BxbP5d4c2Z5cGgtXAku59200Cx7diuHTOYfSBD8n6mm8A==}
     engines: {node: '>=16 || 14 >=14.17'}
+
+  mnemonist@0.40.4:
+    resolution: {integrity: sha512-ZAv+KNavneRVzu4tUeOgzkScI3W5BGwZ3rkxIpKtzzVgfTtWQFN1CgX0U72cyvyh3iTuHL3SiSmrQxTlryEIcw==}
 
   mongodb-connection-string-url@7.0.2:
     resolution: {integrity: sha512-ZoS07RoFqpKYQwAk59qmrx8+jJHNHU30UjlU96QktiGn1ltvDr+vCznLX5DiUBLEpMAHatHNWV1nM/74ul66kA==}
@@ -639,6 +759,9 @@ packages:
 
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
+
+  obliterator@2.0.5:
+    resolution: {integrity: sha512-42CPE9AhahZRsMNslczq0ctAEtqk8Eka26QofnqC346BZdHDySk3LWka23LI7ULIw11NmltpiLagIq8gBozxTw==}
 
   on-exit-leak-free@2.1.2:
     resolution: {integrity: sha512-0eJJY6hXLGf1udHwfNftBqH+g73EU4B504nZeKpz1sYRKafAghwxEJunB2O7rDZkL4PGfsMVnTXZ2EjibbqcsA==}
@@ -710,6 +833,9 @@ packages:
   rfdc@1.4.1:
     resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
 
+  safe-buffer@5.2.1:
+    resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
+
   safe-regex2@5.1.1:
     resolution: {integrity: sha512-mOSBvHGDZMuIEZMdOz/aCEYDCv0E7nfcNsIhUF+/P+xC7Hyf3FkvymqgPbg9D1EdSGu+uKbJgy09K/RKKc7kJA==}
     hasBin: true
@@ -717,6 +843,9 @@ packages:
   safe-stable-stringify@2.5.0:
     resolution: {integrity: sha512-b3rppTKm9T+PsVCBEOUR46GWI7fdOs00VKZ1+9c1EWDaDMvjQc6tUwuFyIprgGgTcWoVHSKrU8H31ZHA2e0RHA==}
     engines: {node: '>=10'}
+
+  safer-buffer@2.1.2:
+    resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
   secure-json-parse@4.1.0:
     resolution: {integrity: sha512-l4KnYfEyqYJxDwlNVyRfO2E4NTHfMKAWdUuA8J0yve2Dz/E/PdBepY03RvyJpssIpRFwJoCD55wA+mEDs6ByWA==}
@@ -751,6 +880,9 @@ packages:
   statuses@2.0.2:
     resolution: {integrity: sha512-DvEy55V3DB7uknRo+4iOGT5fP1slR8wQohVdknigZPMpMstaKJQWhwiYBACJE3Ul2pTnATihhBYnRhZQHGBiRw==}
     engines: {node: '>= 0.8'}
+
+  steed@1.1.3:
+    resolution: {integrity: sha512-EUkci0FAUiE4IvGTSKcDJIQ/eRUP2JJb56+fvZ4sdnguLTqIdKjSxUe138poW8mkvKWXW2sFPrgTsxqoISnmoA==}
 
   strip-json-comments@5.0.3:
     resolution: {integrity: sha512-1tB5mhVo7U+ETBKNf92xT4hrQa3pm0MZ0PQvuDnWgAAGHDsfp4lPSpiS6psrSiet87wyGPh9ft6wmhOMQ0hDiw==}
@@ -795,6 +927,10 @@ packages:
 
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
+
+  xtend@4.0.2:
+    resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
+    engines: {node: '>=0.4'}
 
   yaml@2.9.0:
     resolution: {integrity: sha512-2AvhNX3mb8zd6Zy7INTtSpl1F15HW6Wnqj0srWlkKLcpYl/gMIMJiyuGq2KeI2YFxUPjdlB+3Lc10seMLtL4cA==}
@@ -905,6 +1041,14 @@ snapshots:
 
   '@fastify/forwarded@3.0.2': {}
 
+  '@fastify/jwt@10.2.2':
+    dependencies:
+      '@fastify/error': 4.2.0
+      '@lukeed/ms': 2.0.2
+      fast-jwt: 6.3.3
+      fastify-plugin: 6.0.0
+      steed: 1.1.3
+
   '@fastify/merge-json-schemas@0.2.1':
     dependencies:
       dequal: 2.0.3
@@ -957,6 +1101,61 @@ snapshots:
   '@mongodb-js/saslprep@1.5.0':
     dependencies:
       sparse-bitfield: 3.0.3
+
+  '@node-rs/argon2-android-arm-eabi@2.2.0':
+    optional: true
+
+  '@node-rs/argon2-android-arm64@2.2.0':
+    optional: true
+
+  '@node-rs/argon2-darwin-arm64@2.2.0':
+    optional: true
+
+  '@node-rs/argon2-darwin-x64@2.2.0':
+    optional: true
+
+  '@node-rs/argon2-freebsd-x64@2.2.0':
+    optional: true
+
+  '@node-rs/argon2-linux-arm-gnueabihf@2.2.0':
+    optional: true
+
+  '@node-rs/argon2-linux-arm64-gnu@2.2.0':
+    optional: true
+
+  '@node-rs/argon2-linux-arm64-musl@2.2.0':
+    optional: true
+
+  '@node-rs/argon2-linux-x64-gnu@2.2.0':
+    optional: true
+
+  '@node-rs/argon2-linux-x64-musl@2.2.0':
+    optional: true
+
+  '@node-rs/argon2-win32-arm64-msvc@2.2.0':
+    optional: true
+
+  '@node-rs/argon2-win32-ia32-msvc@2.2.0':
+    optional: true
+
+  '@node-rs/argon2-win32-x64-msvc@2.2.0':
+    optional: true
+
+  '@node-rs/argon2@2.2.0':
+    optionalDependencies:
+      '@node-rs/argon2-android-arm-eabi': 2.2.0
+      '@node-rs/argon2-android-arm64': 2.2.0
+      '@node-rs/argon2-darwin-arm64': 2.2.0
+      '@node-rs/argon2-darwin-x64': 2.2.0
+      '@node-rs/argon2-freebsd-x64': 2.2.0
+      '@node-rs/argon2-linux-arm-gnueabihf': 2.2.0
+      '@node-rs/argon2-linux-arm64-gnu': 2.2.0
+      '@node-rs/argon2-linux-arm64-musl': 2.2.0
+      '@node-rs/argon2-linux-x64-gnu': 2.2.0
+      '@node-rs/argon2-linux-x64-musl': 2.2.0
+      '@node-rs/argon2-win32-arm64-msvc': 2.2.0
+      '@node-rs/argon2-win32-ia32-msvc': 2.2.0
+      '@node-rs/argon2-win32-x64-msvc': 2.2.0
 
   '@pinojs/redact@0.4.0': {}
 
@@ -1045,6 +1244,13 @@ snapshots:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
+  asn1.js@5.4.1:
+    dependencies:
+      bn.js: 4.12.5
+      inherits: 2.0.4
+      minimalistic-assert: 1.0.1
+      safer-buffer: 2.1.2
+
   atomic-sleep@1.0.0: {}
 
   avvio@9.3.0:
@@ -1053,6 +1259,8 @@ snapshots:
       fastq: 1.20.3
 
   balanced-match@4.0.4: {}
+
+  bn.js@4.12.5: {}
 
   brace-expansion@5.0.9:
     dependencies:
@@ -1081,6 +1289,10 @@ snapshots:
   dequal@2.0.3: {}
 
   dotenv@17.4.2: {}
+
+  ecdsa-sig-formatter@1.0.11:
+    dependencies:
+      safe-buffer: 5.2.1
 
   end-of-stream@1.4.5:
     dependencies:
@@ -1132,6 +1344,14 @@ snapshots:
       json-schema-ref-resolver: 3.0.0
       rfdc: 1.4.1
 
+  fast-jwt@6.3.3:
+    dependencies:
+      '@lukeed/ms': 2.0.2
+      asn1.js: 5.4.1
+      ecdsa-sig-formatter: 1.0.11
+      mnemonist: 0.40.4
+      safe-regex2: 5.1.1
+
   fast-querystring@1.1.2:
     dependencies:
       fast-decode-uri-component: 1.0.1
@@ -1141,6 +1361,10 @@ snapshots:
   fast-uri@3.1.7: {}
 
   fast-uri@4.1.4: {}
+
+  fastfall@1.5.1:
+    dependencies:
+      reusify: 1.1.0
 
   fastify-plugin@6.0.0: {}
 
@@ -1170,9 +1394,19 @@ snapshots:
       semver: 7.8.5
       toad-cache: 3.7.4
 
+  fastparallel@2.4.1:
+    dependencies:
+      reusify: 1.1.0
+      xtend: 4.0.2
+
   fastq@1.20.3:
     dependencies:
       reusify: 1.1.0
+
+  fastseries@1.7.2:
+    dependencies:
+      reusify: 1.1.0
+      xtend: 4.0.2
 
   find-my-way@9.9.0:
     dependencies:
@@ -1244,6 +1478,8 @@ snapshots:
 
   mime@3.0.0: {}
 
+  minimalistic-assert@1.0.1: {}
+
   minimatch@10.2.6:
     dependencies:
       brace-expansion: 5.0.9
@@ -1251,6 +1487,10 @@ snapshots:
   minimist@1.2.8: {}
 
   minipass@7.1.3: {}
+
+  mnemonist@0.40.4:
+    dependencies:
+      obliterator: 2.0.5
 
   mongodb-connection-string-url@7.0.2:
     dependencies:
@@ -1286,6 +1526,8 @@ snapshots:
   mquery@6.0.0: {}
 
   ms@2.1.3: {}
+
+  obliterator@2.0.5: {}
 
   on-exit-leak-free@2.1.2: {}
 
@@ -1363,11 +1605,15 @@ snapshots:
 
   rfdc@1.4.1: {}
 
+  safe-buffer@5.2.1: {}
+
   safe-regex2@5.1.1:
     dependencies:
       ret: 0.5.0
 
   safe-stable-stringify@2.5.0: {}
+
+  safer-buffer@2.1.2: {}
 
   secure-json-parse@4.1.0: {}
 
@@ -1392,6 +1638,14 @@ snapshots:
   standard-as-callback@2.1.0: {}
 
   statuses@2.0.2: {}
+
+  steed@1.1.3:
+    dependencies:
+      fastfall: 1.5.1
+      fastparallel: 2.4.1
+      fastq: 1.20.3
+      fastseries: 1.7.2
+      reusify: 1.1.0
 
   strip-json-comments@5.0.3: {}
 
@@ -1446,6 +1700,8 @@ snapshots:
       webidl-conversions: 7.0.0
 
   wrappy@1.0.2: {}
+
+  xtend@4.0.2: {}
 
   yaml@2.9.0: {}
 
