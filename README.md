@@ -8,8 +8,8 @@ Docker, and Kubernetes** — where each technology is load-bearing rather than d
 
 ## Status
 
-Phase 3 of 13 complete — authentication: argon2id passwords, JWT access tokens,
-and rotating refresh tokens in Redis with theft detection.
+Phase 4 of 13 complete — anti-cheat score submission: server-issued single-use
+play tokens, plausibility checks, and idempotent retries.
 
 Full roadmap: [`docs/roadmap.md`](docs/roadmap.md) ·
 Decisions: [`docs/decisions/`](docs/decisions/)
@@ -76,6 +76,8 @@ pnpm install && cp .env.example .env && pnpm dev
 | `POST /auth/refresh` | Rotate the refresh token (single-use) |
 | `POST /auth/logout` | Revoke a whole token family → 204 |
 | `GET /auth/me` | The authenticated user (requires Bearer token) |
+| `POST /plays/start` | Begin a play, receive a single-use play token |
+| `POST /plays/submit` | Submit a score against that token (anti-cheat checked) |
 | `GET /users` | List users |
 | `GET /users/:id` | Public profile (no email, no password hash) |
 
@@ -105,6 +107,8 @@ src/
   modules/games/     model | schemas | service | routes  (see ADR 0007)
   modules/users/     same layering
   modules/auth/      password hashing, refresh-token store, auth service/routes
+  modules/plays/     play tokens, anti-cheat validation, play history
+  shared/idempotency.ts   run an operation at most once per (user, key)
   app.ts             buildApp() — no listener, so tests can use app.inject()
   server.ts          Entrypoint: signals registered before boot, then listen
 Dockerfile           Multi-stage; runtime is 268MB, non-root, tini as PID 1
