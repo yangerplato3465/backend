@@ -5,6 +5,7 @@ import { GameModel } from '../games/game.model.js';
 import { PlayModel } from './play.model.js';
 import type { StartPlayInput, SubmitPlayInput } from './play.schemas.js';
 import { BadRequestError, NotFoundError } from '../../shared/errors.js';
+import { recordScore } from '../leaderboards/leaderboard.service.js';
 
 /**
  * Anti-cheat score submission.
@@ -155,6 +156,27 @@ export async function submitPlay(redis: Redis, userId: string, input: SubmitPlay
     scorePerSecond,
   });
 
+  /**
+   * Only ACCEPTED scores reach the leaderboard. MongoDB keeps every attempt for
+   * auditing; Redis holds only what counts.
+   *
+   * The write happens after the play is persisted, so the source of truth is
+   * never behind the derived index. If this Redis write failed, the board would
+   * be briefly stale — and `rebuild-leaderboards.ts` reconstructs it from the
+   * `plays` collection, which is why that is tolerable.
+   */
+  let newPersonalBest: boolean | null = null;
+  if (play.accepted) {
+    const result = await recordScore(
+      redis,
+      game._id.toString(),
+      game.scoreDirection as 'higher' | 'lower',
+      userId,
+      input.score,
+    );
+    newPersonalBest = result.improved;
+  }
+
   return {
     playId: play._id.toString(),
     accepted: play.accepted,
@@ -162,5 +184,6 @@ export async function submitPlay(redis: Redis, userId: string, input: SubmitPlay
     durationMs: play.durationMs,
     scorePerSecond: Number(scorePerSecond.toFixed(3)),
     rejectionReason,
+    newPersonalBest,
   };
 }

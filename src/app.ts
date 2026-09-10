@@ -18,6 +18,7 @@ import { gameRoutes } from './modules/games/game.routes.js';
 import { userRoutes } from './modules/users/user.routes.js';
 import { authRoutes } from './modules/auth/auth.routes.js';
 import { playRoutes } from './modules/plays/play.routes.js';
+import { leaderboardRoutes } from './modules/leaderboards/leaderboard.routes.js';
 
 /**
  * Builds the app WITHOUT starting a listener, so tests can drive it with
@@ -102,6 +103,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(gameRoutes);
   await app.register(userRoutes);
   await app.register(playRoutes);
+  await app.register(leaderboardRoutes);
 
   return app;
 }

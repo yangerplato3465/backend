@@ -8,8 +8,8 @@ Docker, and Kubernetes** — where each technology is load-bearing rather than d
 
 ## Status
 
-Phase 4 of 13 complete — anti-cheat score submission: server-issued single-use
-play tokens, plausibility checks, and idempotent retries.
+Phase 5 of 13 complete — Redis sorted-set leaderboards with self-expiring daily
+and weekly windows, and a rebuild script proving Redis is a derived index.
 
 Full roadmap: [`docs/roadmap.md`](docs/roadmap.md) ·
 Decisions: [`docs/decisions/`](docs/decisions/)
@@ -58,6 +58,7 @@ pnpm install && cp .env.example .env && pnpm dev
 | `pnpm build` | Compile TypeScript to `dist/` |
 | `pnpm start` | Run compiled output — this is what the container runs |
 | `pnpm typecheck` | Types only, no emit |
+| `pnpm rebuild:leaderboards` | Rebuild every Redis board from MongoDB |
 
 ## Endpoints
 
@@ -78,6 +79,8 @@ pnpm install && cp .env.example .env && pnpm dev
 | `GET /auth/me` | The authenticated user (requires Bearer token) |
 | `POST /plays/start` | Begin a play, receive a single-use play token |
 | `POST /plays/submit` | Submit a score against that token (anti-cheat checked) |
+| `GET /games/:slug/leaderboard` | Ranked scores (`?window=global\|daily\|weekly`) |
+| `GET /games/:slug/leaderboard/me` | Your own rank — O(log N) via ZREVRANK |
 | `GET /users` | List users |
 | `GET /users/:id` | Public profile (no email, no password hash) |
 
@@ -108,6 +111,8 @@ src/
   modules/users/     same layering
   modules/auth/      password hashing, refresh-token store, auth service/routes
   modules/plays/     play tokens, anti-cheat validation, play history
+  modules/leaderboards/   sorted-set boards, UTC day/week bucketing
+  scripts/rebuild-leaderboards.ts   rebuilds all boards from MongoDB
   shared/idempotency.ts   run an operation at most once per (user, key)
   app.ts             buildApp() — no listener, so tests can use app.inject()
   server.ts          Entrypoint: signals registered before boot, then listen

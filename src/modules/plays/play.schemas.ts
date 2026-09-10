@@ -27,6 +27,8 @@ export const submitPlayResponseSchema = z.object({
   durationMs: z.number(),
   scorePerSecond: z.number(),
   rejectionReason: z.string().nullable(),
+  // null when the score was rejected; true when it beat this player's best.
+  newPersonalBest: z.boolean().nullable(),
 });
 
 export type StartPlayInput = z.infer<typeof startPlaySchema>;
